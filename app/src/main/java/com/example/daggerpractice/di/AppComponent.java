@@ -12,11 +12,15 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(
         // Needed when you use the Android stuff
         modules = {
-                AndroidSupportInjectionModule.class
+                // Always needed
+                AndroidSupportInjectionModule.class,
+                //
+                ActivityBuildersModule.class,
+                AppModule.class,
         }
 )
 public interface AppComponent extends AndroidInjector<BaseApplication> {
-    // You can think of AppCompoenent as a Service and BaseApplication would be the client. Using AndroidInjector<BaseApplication>
+    // You can think of AppComponent as a Service and BaseApplication would be the client. Using AndroidInjector<BaseApplication>
     // you are telling Dagger to inject BaseApplication into this component.
 
     @Component.Builder
