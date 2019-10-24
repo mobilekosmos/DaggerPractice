@@ -11,7 +11,8 @@ public abstract class ActivityBuildersModule {
 
     // All of the app activities must be declared here
 
-    // This must be abstract and return an object of type Activity
+    // This must be abstract and return an object of type Activity.
+    // This also defines the AuthComponent, a subComponent generated automatically using this annotation.
     @ContributesAndroidInjector(
             modules = {AuthViewModelsModule.class}
     )
