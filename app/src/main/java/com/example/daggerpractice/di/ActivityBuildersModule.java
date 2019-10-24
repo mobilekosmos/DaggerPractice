@@ -1,9 +1,9 @@
 package com.example.daggerpractice.di;
 
-import com.example.daggerpractice.AuthActivity;
+import com.example.daggerpractice.di.auth.AuthViewModelsModule;
+import com.example.daggerpractice.ui.auth.AuthActivity;
 
 import dagger.Module;
-import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 
 @Module
@@ -12,7 +12,9 @@ public abstract class ActivityBuildersModule {
     // All of the app activities must be declared here
 
     // This must be abstract and return an object of type Activity
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+            modules = {AuthViewModelsModule.class}
+    )
     abstract AuthActivity contributeAuthActivity();
 
     // With this AuthActivity is a potential client Dagger can inject dependencies to.
