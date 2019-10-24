@@ -1,5 +1,6 @@
 package com.example.daggerpractice.di;
 
+import com.example.daggerpractice.di.auth.AuthModule;
 import com.example.daggerpractice.di.auth.AuthViewModelsModule;
 import com.example.daggerpractice.ui.auth.AuthActivity;
 
@@ -14,7 +15,7 @@ public abstract class ActivityBuildersModule {
     // This must be abstract and return an object of type Activity.
     // This also defines the AuthComponent, a subComponent generated automatically using this annotation.
     @ContributesAndroidInjector(
-            modules = {AuthViewModelsModule.class}
+            modules = {AuthViewModelsModule.class, AuthModule.class}
     )
     abstract AuthActivity contributeAuthActivity();
 

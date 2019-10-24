@@ -43,10 +43,10 @@ public class AuthActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelProviderFactory).get(AuthViewModel.class);
         Log.d(TAG, "onCreate: " + asdfasdf);
         Log.d(TAG, "onCreate: is app null? " + isAppNull);
 
+        mViewModel = ViewModelProviders.of(this, mViewModelProviderFactory).get(AuthViewModel.class);
         setLogo();
     }
 

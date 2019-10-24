@@ -18,7 +18,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         modules = {
                 // Always needed
                 AndroidSupportInjectionModule.class,
-                //
+                // Optional
                 ActivityBuildersModule.class,
                 AppModule.class,
 
