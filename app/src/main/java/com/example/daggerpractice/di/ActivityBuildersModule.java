@@ -18,7 +18,6 @@ public abstract class ActivityBuildersModule {
             modules = {AuthViewModelsModule.class, AuthModule.class}
     )
     abstract AuthActivity contributeAuthActivity();
-
     // With this AuthActivity is a potential client Dagger can inject dependencies to.
 
 //    // Example how to create a dependency, just an example, normally you won't add this "Provides" directly here in this class.
