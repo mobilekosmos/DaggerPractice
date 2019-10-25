@@ -2,6 +2,9 @@ package com.example.daggerpractice.ui.auth;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.daggerpractice.models.User;
@@ -18,6 +21,27 @@ public class AuthViewModel extends ViewModel {
     private static final String TAG = "AuthViewModel";
 
     private final AuthApi mAuthApi;
+
+    private MediatorLiveData<User> mAuthUser = new MediatorLiveData<>();
+
+    public void authenticateWithId(int userId) {
+        final LiveData<User> source = LiveDataReactiveStreams.fromPublisher(
+                mAuthApi.getUser(userId)
+                .subscribeOn(Schedulers.io())
+        );
+
+        mAuthUser.addSource(source, new androidx.lifecycle.Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                mAuthUser.setValue(user);
+                mAuthUser.removeSource(source);
+            }
+        });
+    }
+
+    public LiveData<User> observeUser() {
+        return mAuthUser;
+    }
 
     @Inject
     public AuthViewModel(final AuthApi authApi) {
