@@ -32,7 +32,7 @@ public class AuthViewModel extends ViewModel {
 
         mAuthUser.addSource(source, new androidx.lifecycle.Observer<User>() {
             @Override
-            public void onChanged(User user) {
+            public void onChanged(final User user) {
                 mAuthUser.setValue(user);
                 mAuthUser.removeSource(source);
             }
