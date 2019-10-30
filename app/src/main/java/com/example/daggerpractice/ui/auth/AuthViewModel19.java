@@ -1,6 +1,5 @@
 package com.example.daggerpractice.ui.auth;
 
-import android.se.omapi.Session;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -8,7 +7,6 @@ import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.daggerpractice.SessionManager;
 import com.example.daggerpractice.models.User;
 import com.example.daggerpractice.network.auth.AuthApi;
 
@@ -19,17 +17,16 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class AuthViewModel extends ViewModel {
+// The ViewModel till lesson #19, before injecting with Dagger.
+public class AuthViewModel19 extends ViewModel {
 
     private static final String TAG = "AuthViewModel";
 
     private final AuthApi mAuthApi;
-    private SessionManager mSessionManager;
 
+    private MediatorLiveData<AuthResource<User>> mAuthUser = new MediatorLiveData<>();
 
     // First code without using the wrapper AuthResource.java
-
-//    private MediatorLiveData<AuthResource<User>> mAuthUser = new MediatorLiveData<>();
 //    public void authenticateWithId(int userId) {
 //        final LiveData<User> source = LiveDataReactiveStreams.fromPublisher(
 //                mAuthApi.getUser(userId)
@@ -46,12 +43,10 @@ public class AuthViewModel extends ViewModel {
 //    }
 
     public void authenticateWithId(int userId) {
-        Log.d(TAG, "authenticateWithId: attempting to login.");
-        mSessionManager.authenticateWithId(queryUserId(userId));
-    }
+        // Informs the UI that a connection is attempted to be made
+        mAuthUser.setValue(AuthResource.loading((User)null));
 
-    private LiveData<AuthResource<User>> queryUserId(int userId) {
-        return LiveDataReactiveStreams.fromPublisher(
+        final LiveData<AuthResource<User>> source = LiveDataReactiveStreams.fromPublisher(
                 mAuthApi.getUser(userId)
                         .onErrorReturn(new Function<Throwable, User>() {
                             @Override
@@ -66,23 +61,30 @@ public class AuthViewModel extends ViewModel {
                             @Override
                             public AuthResource<User> apply(final User user) throws Exception {
                                 if (user.getId() == -1) {
-                                    return AuthResource.error("Could not authenticate", (User) null);
+                                    return AuthResource.error("Could not authenticate", (User)null);
                                 }
                                 return AuthResource.authenticated(user);
                             }
                         })
-                        .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
         );
+
+        mAuthUser.addSource(source, new androidx.lifecycle.Observer<AuthResource<User>>() {
+            @Override
+            public void onChanged(final AuthResource<User> user) {
+                mAuthUser.setValue(user);
+                mAuthUser.removeSource(source);
+            }
+        });
     }
 
-    public LiveData<AuthResource<User>> observeAuthState() {
-        return mSessionManager.getAuthUser();
+    public LiveData<AuthResource<User>> observeUser() {
+        return mAuthUser;
     }
 
     @Inject
-    public AuthViewModel(final AuthApi authApi, final SessionManager sessionManager) {
+    public AuthViewModel19(final AuthApi authApi) {
         mAuthApi = authApi;
-        mSessionManager = sessionManager;
         Log.d(TAG, "AuthViewModel: viewmodel is working....");
 
         if (mAuthApi == null) {
