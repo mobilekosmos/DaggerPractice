@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -45,11 +47,14 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
     private EditText mUserId;
 
+    private ProgressBar mProgressBar;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         mUserId = findViewById(R.id.user_id_input);
+        mProgressBar = findViewById(R.id.progress_bar);
         findViewById(R.id.login_button).setOnClickListener(this);
         Log.d(TAG, "onCreate: " + asdfasdf);
         Log.d(TAG, "onCreate: is app null? " + isAppNull);
@@ -82,11 +87,37 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     }
 
     private void subscribeObservers() {
-        mViewModel.observeUser().observe(this, new Observer<User>() {
+
+        // First code without using the wrapper AuthResource.java in AuthViewModel.java
+//        mViewModel.observeUser().observe(this, new Observer<User>() {
+//            @Override
+//            public void onChanged(final User user) {
+//                if (user != null) {
+//                    Log.d(TAG, "onChanged: " + user.getEmail());
+//                }
+//            }
+//        });
+
+        mViewModel.observeUser().observe(this, new Observer<AuthResource<User>>() {
             @Override
-            public void onChanged(final User user) {
-                if (user != null) {
-                    Log.d(TAG, "onChanged: " + user.getEmail());
+            public void onChanged(AuthResource<User> userAuthResource) {
+                if (userAuthResource != null) {
+                    switch (userAuthResource.status) {
+                        case LOADING:
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            break;
+                        case ERROR:
+                            mProgressBar.setVisibility(View.GONE);
+                            Toast.makeText(AuthActivity.this, userAuthResource.message + "\nOnly numbers between 1-10 are allowed!", Toast.LENGTH_SHORT).show();
+                            break;
+                        case AUTHENTICATED:
+                            mProgressBar.setVisibility(View.GONE);
+                            Log.d(TAG, "onChanged: LOGIN SUCCESS: " + userAuthResource.data.getEmail());
+                            break;
+                        case NOT_AUTHENTICATED:
+                            mProgressBar.setVisibility(View.GONE);
+                            break;
+                    }
                 }
             }
         });

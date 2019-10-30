@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class AuthViewModel extends ViewModel {
@@ -22,24 +23,61 @@ public class AuthViewModel extends ViewModel {
 
     private final AuthApi mAuthApi;
 
-    private MediatorLiveData<User> mAuthUser = new MediatorLiveData<>();
+    private MediatorLiveData<AuthResource<User>> mAuthUser = new MediatorLiveData<>();
+
+    // First code without using the wrapper AuthResource.java
+//    public void authenticateWithId(int userId) {
+//        final LiveData<User> source = LiveDataReactiveStreams.fromPublisher(
+//                mAuthApi.getUser(userId)
+//                        .subscribeOn(Schedulers.io())
+//        );
+//
+//        mAuthUser.addSource(source, new androidx.lifecycle.Observer<User>() {
+//            @Override
+//            public void onChanged(final User user) {
+//                mAuthUser.setValue(user);
+//                mAuthUser.removeSource(source);
+//            }
+//        });
+//    }
 
     public void authenticateWithId(int userId) {
-        final LiveData<User> source = LiveDataReactiveStreams.fromPublisher(
+        // Informs the UI that a connection is attempted to be made
+        mAuthUser.setValue(AuthResource.loading((User)null));
+
+        final LiveData<AuthResource<User>> source = LiveDataReactiveStreams.fromPublisher(
                 mAuthApi.getUser(userId)
+                        .onErrorReturn(new Function<Throwable, User>() {
+                            @Override
+                            public User apply(final Throwable throwable) throws Exception {
+                                final User errorUser = new User();
+                                errorUser.setId(-1);
+                                return errorUser;
+                            }
+                        })
+
+                        .map(new Function<User, AuthResource<User>>() {
+                            @Override
+                            public AuthResource<User> apply(final User user) throws Exception {
+                                if (user.getId() == -1) {
+                                    return AuthResource.error("Could not authenticate", (User)null);
+                                }
+                                return AuthResource.authenticated(user);
+                            }
+                        })
                 .subscribeOn(Schedulers.io())
         );
 
-        mAuthUser.addSource(source, new androidx.lifecycle.Observer<User>() {
+        mAuthUser.addSource(source, new androidx.lifecycle.Observer<AuthResource<User>>() {
             @Override
-            public void onChanged(final User user) {
+            public void onChanged(final AuthResource<User> user) {
                 mAuthUser.setValue(user);
                 mAuthUser.removeSource(source);
             }
         });
     }
 
-    public LiveData<User> observeUser() {
+    public LiveData<AuthResource<User>> observeUser() {
         return mAuthUser;
     }
 
