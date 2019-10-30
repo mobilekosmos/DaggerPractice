@@ -1,8 +1,10 @@
 package com.example.daggerpractice.di;
 
 import android.app.Application;
+import android.se.omapi.Session;
 
 import com.example.daggerpractice.BaseApplication;
+import com.example.daggerpractice.SessionManager;
 
 import javax.inject.Singleton;
 
@@ -28,6 +30,9 @@ import dagger.android.support.AndroidSupportInjectionModule;
 public interface AppComponent extends AndroidInjector<BaseApplication> {
     // You can think of AppComponent as a Service and BaseApplication would be the client. Using AndroidInjector<BaseApplication>
     // you are telling Dagger to inject BaseApplication into this component.
+
+    // We want the sessionManager to live through the entire lifetime of the application so we put this here.
+    SessionManager sessionManager();
 
     @Component.Builder
     interface Builder {
