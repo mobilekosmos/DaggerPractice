@@ -31,7 +31,7 @@ public interface AppComponent extends AndroidInjector<BaseApplication> {
     // You can think of AppComponent as a Service and BaseApplication would be the client. Using AndroidInjector<BaseApplication>
     // you are telling Dagger to inject BaseApplication into this component.
 
-    // We want the sessionManager to live through the entire lifetime of the application so we put this here.
+    // We want the mSessionManager to live through the entire lifetime of the application so we put this here.
     SessionManager sessionManager();
 
     @Component.Builder

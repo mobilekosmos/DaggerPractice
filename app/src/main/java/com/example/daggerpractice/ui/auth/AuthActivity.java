@@ -1,5 +1,6 @@
 package com.example.daggerpractice.ui.auth;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.bumptech.glide.RequestManager;
 import com.example.daggerpractice.R;
 import com.example.daggerpractice.models.User;
+import com.example.daggerpractice.ui.main.MainActivity;
 import com.example.daggerpractice.viewmodels.ViewModelProviderFactory;
 
 import javax.inject.Inject;
@@ -100,7 +102,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
         mViewModel.observeAuthState().observe(this, new Observer<AuthResource<User>>() {
             @Override
-            public void onChanged(AuthResource<User> userAuthResource) {
+            public void onChanged(final AuthResource<User> userAuthResource) {
                 if (userAuthResource != null) {
                     switch (userAuthResource.status) {
                         case LOADING:
@@ -108,11 +110,13 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                             break;
                         case ERROR:
                             mProgressBar.setVisibility(View.GONE);
+                            Log.e(TAG, "onChanged: " + userAuthResource.message);
                             Toast.makeText(AuthActivity.this, userAuthResource.message + "\nOnly numbers between 1-10 are allowed!", Toast.LENGTH_SHORT).show();
                             break;
                         case AUTHENTICATED:
                             mProgressBar.setVisibility(View.GONE);
                             Log.d(TAG, "onChanged: LOGIN SUCCESS: " + userAuthResource.data.getEmail());
+                            onLoginSuccess();
                             break;
                         case NOT_AUTHENTICATED:
                             mProgressBar.setVisibility(View.GONE);
@@ -121,5 +125,10 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                 }
             }
         });
+    }
+
+    private void onLoginSuccess() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

@@ -3,6 +3,7 @@ package com.example.daggerpractice.di;
 import com.example.daggerpractice.di.auth.AuthModule;
 import com.example.daggerpractice.di.auth.AuthViewModelsModule;
 import com.example.daggerpractice.ui.auth.AuthActivity;
+import com.example.daggerpractice.ui.main.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -25,4 +26,8 @@ public abstract class ActivityBuildersModule {
 //    static String someString() {
 //        return "this is a test string";
 //    }
+
+    @ContributesAndroidInjector
+    abstract MainActivity contributeMainActivity();
+
 }
