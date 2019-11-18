@@ -128,6 +128,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     }
 
     private void onLoginSuccess() {
+        Log.d(TAG, "onLoginSuccess: login successful!");
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
