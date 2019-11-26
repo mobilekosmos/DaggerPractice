@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,7 @@ public class ProfileFragment extends DaggerFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        Toast.makeText(getActivity(), "Profile Fragment", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Profile Fragment", Toast.LENGTH_SHORT).show();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -50,7 +51,7 @@ public class ProfileFragment extends DaggerFragment {
         mViewModel = new ViewModelProvider(this, mProviderFactory).get(ProfileViewModel.class);
 
         super.onViewCreated(view, savedInstanceState);
-
+        subscribeObservers();
     }
 
     private void subscribeObservers() {
@@ -86,4 +87,6 @@ public class ProfileFragment extends DaggerFragment {
         mUsername.setText(data.getUsername());
         mWebsite.setText(data.getWebsite());
     }
+
+
 }
