@@ -1,6 +1,7 @@
 package com.example.daggerpractice.di;
 
 import com.example.daggerpractice.di.auth.AuthModule;
+import com.example.daggerpractice.di.auth.AuthScope;
 import com.example.daggerpractice.di.auth.AuthViewModelsModule;
 import com.example.daggerpractice.di.main.MainFragmentBuildersModule;
 import com.example.daggerpractice.di.main.MainModule;
@@ -18,6 +19,7 @@ public abstract class ActivityBuildersModule {
 
     // This must be abstract and return an object of type Activity.
     // This also defines the AuthComponent, a subComponent generated automatically using this annotation.
+    @AuthScope
     @ContributesAndroidInjector(
             modules = {AuthViewModelsModule.class, AuthModule.class}
     )
@@ -30,6 +32,7 @@ public abstract class ActivityBuildersModule {
 //        return "this is a test string";
 //    }
 
+    @AuthScope
     @ContributesAndroidInjector(
             modules = {MainFragmentBuildersModule.class, MainViewModelsModule.class, MainModule.class}
     )
