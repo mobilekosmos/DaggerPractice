@@ -9,8 +9,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.daggerpractice.R;
+import com.example.daggerpractice.models.User;
 import com.example.daggerpractice.util.Constants;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -64,5 +66,14 @@ public class AppModule {
     @Provides
     static Drawable provideAppDrawable(Application application) {
         return ContextCompat.getDrawable(application, R.drawable.logo);
+    }
+
+    // If the same object type is declared in different modules the project won't compile
+    // so we must add a name annotation
+    @Singleton
+    @Provides
+    @Named("app-user")
+    static User someUser() {
+        return new User();
     }
 }

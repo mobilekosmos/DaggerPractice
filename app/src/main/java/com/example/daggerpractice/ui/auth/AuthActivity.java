@@ -21,6 +21,7 @@ import com.example.daggerpractice.ui.main.MainActivity;
 import com.example.daggerpractice.viewmodels.ViewModelProviderFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -51,6 +52,14 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
     private ProgressBar mProgressBar;
 
+    @Inject
+    @Named("app-user")
+    User mUserNumber1;
+
+    @Inject
+    @Named("auth-user")
+    User mUserNumber2;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +73,13 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
         mViewModel = ViewModelProviders.of(this, mViewModelProviderFactory).get(AuthViewModel.class);
         setLogo();
         subscribeObservers();
+
+        // When the User is defined in AppModule:  Rotate the screen and you will see that in the log the same memory address is being shown, that's
+        // because mUserNumber1 is a singleton.
+        // When the User is defined in AuthModule: Rotate the screen and you will see that the memory address is a new one. That's because the auth-component
+        // is being destroyed on rotation.
+        Log.d(TAG, "onCreate: " + mUserNumber1);
+        Log.d(TAG, "onCreate: " + mUserNumber2);
     }
 
     private void setLogo() {
