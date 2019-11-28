@@ -5,6 +5,7 @@ import com.example.daggerpractice.di.auth.AuthScope;
 import com.example.daggerpractice.di.auth.AuthViewModelsModule;
 import com.example.daggerpractice.di.main.MainFragmentBuildersModule;
 import com.example.daggerpractice.di.main.MainModule;
+import com.example.daggerpractice.di.main.MainScope;
 import com.example.daggerpractice.di.main.MainViewModelsModule;
 import com.example.daggerpractice.ui.auth.AuthActivity;
 import com.example.daggerpractice.ui.main.MainActivity;
@@ -32,7 +33,7 @@ public abstract class ActivityBuildersModule {
 //        return "this is a test string";
 //    }
 
-    @AuthScope
+    @MainScope
     @ContributesAndroidInjector(
             modules = {MainFragmentBuildersModule.class, MainViewModelsModule.class, MainModule.class}
     )

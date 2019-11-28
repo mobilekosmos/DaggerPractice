@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.example.daggerpractice"
-        minSdkVersion 29
+        minSdkVersion 27
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -21,7 +21,7 @@ android {
 
 dependencies {
 
-    def dagger_version = "2.23.2"
+    def dagger_version = "2.25.2"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -48,7 +48,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     // Retrofit
-    def retrofitVersion = "2.5.0"
+    def retrofitVersion = '2.6.2'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
 
@@ -58,7 +58,7 @@ dependencies {
 
     // Rx-Retrofit Call Adapter
     def rxcalladapter_version = '2.5.0'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcalladapter_version" // Retrofit call adapter
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2" // Retrofit call adapter
 
     // Reactive Streams (convert Observable to LiveData)
     def reactivestreams_version = "1.1.1"
